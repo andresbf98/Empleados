@@ -1,0 +1,31 @@
+//En MainWindow.xaml.cs
+public void eliminarEmpleado()
+        {
+            try
+            {
+                View_Empleado empleado = (View_Empleado)dataGrid1.SelectedItem;
+                db.borrarEmpleado(empleado.Cédula);
+            }
+            catch (SystemException ex)
+            {
+                MessageBox.Show(string.Format("An error occurred: {0}", ex.Message));
+            }
+        }
+
+        private void Eliminar_Empleado_Click(object sender, RoutedEventArgs e)
+        {
+            eliminarEmpleado();
+            var empleados = db.View_Empleado;
+            dataGrid1.ItemsSource = empleados.ToList();
+            Refresh(dataGrid1);
+        }
+
+        private delegate void NoArgDelegate();
+        public static void Refresh(DependencyObject obj)
+        {
+            obj.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle,
+                (NoArgDelegate)delegate { });
+        }
+        
+        //Y en la UI un botoncito sexy que se llame Eliminar_Empleado(el nombre del boton, no lo que dice)
+        //No se si tienen que actualizar el modelo de la base e incluir el sp de borrarEmpleado
